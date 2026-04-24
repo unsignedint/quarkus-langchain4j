@@ -70,7 +70,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
 
     @Override
     public Response<Image> generate(String prompt) {
-        GenerateImagesRequest request = requestBuilder(prompt).build();
+        GenerateImagesRequest request = buildRequest(prompt, 1);
 
         GenerateImagesResponse response = withRetry(() -> client.imagesGeneration(request), maxRetries).execute();
         persistIfNecessary(response);
@@ -80,7 +80,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
 
     @Override
     public Response<List<Image>> generate(String prompt, int n) {
-        GenerateImagesRequest request = requestBuilder(prompt).n(n).build();
+        GenerateImagesRequest request = buildRequest(prompt, n);
 
         GenerateImagesResponse response = withRetry(() -> client.imagesGeneration(request), maxRetries).execute();
         persistIfNecessary(response);
@@ -115,21 +115,27 @@ public class QuarkusOpenAiImageModel implements ImageModel {
         return Image.builder().url(data.url()).base64Data(data.b64Json()).revisedPrompt(data.revisedPrompt()).build();
     }
 
-    private GenerateImagesRequest.Builder requestBuilder(String prompt) {
+    private GenerateImagesRequest buildRequest(String prompt, int n) {
         var builder = GenerateImagesRequest
                 .builder()
                 .prompt(prompt)
                 .model(modelName)
+                .n(n)
                 .size(size)
-                .quality(quality)
-                .style(style)
-                .responseFormat(responseFormat);
+                .quality(quality);
+
+        if (style != null) {
+            builder.style(style);
+        }
+        if (responseFormat != null) {
+            builder.responseFormat(responseFormat);
+        }
 
         if (user.isPresent()) {
             builder.user(user.get());
         }
 
-        return builder;
+        return builder.build();
     }
 
     public static Builder builder() {

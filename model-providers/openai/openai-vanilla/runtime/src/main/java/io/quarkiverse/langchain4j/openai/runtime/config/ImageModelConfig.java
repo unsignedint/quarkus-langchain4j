@@ -34,10 +34,12 @@ public interface ImageModelConfig {
     /**
      * The format in which the generated images are returned.
      * <p>
-     * Must be one of {@code url} or {@code b64_json}
+     * Must be one of {@code url} or {@code b64_json}.
+     * <p>
+     * This param is rejected by {@code gpt-image-1} and later image models, which always return base64 data. When
+     * unset, the field is omitted from the request so those models are not affected.
      */
-    @WithDefault("url")
-    String responseFormat();
+    Optional<String> responseFormat();
 
     /**
      * The size of the generated images.
@@ -45,6 +47,9 @@ public interface ImageModelConfig {
      * Must be one of {@code 1024x1024}, {@code 1792x1024}, or {@code 1024x1792} when the model is {@code dall-e-3}.
      * <p>
      * Must be one of {@code 256x256}, {@code 512x512}, or {@code 1024x1024} when the model is {@code dall-e-2}.
+     * <p>
+     * Must be one of {@code 1024x1024}, {@code 1024x1536}, {@code 1536x1024}, or {@code auto} when the model is
+     * {@code gpt-image-1}.
      */
     @WithDefault("1024x1024")
     String size();
@@ -52,9 +57,8 @@ public interface ImageModelConfig {
     /**
      * The quality of the image that will be generated.
      * <p>
-     * {@code hd} creates images with finer details and greater consistency across the image.
-     * <p>
-     * This param is only supported for when the model is {@code dall-e-3}.
+     * For {@code dall-e-3}: {@code standard} or {@code hd}. For {@code dall-e-2}: {@code standard} only. For
+     * {@code gpt-image-1}: {@code low}, {@code medium}, {@code high}, or {@code auto}.
      */
     @WithDefault("standard")
     String quality();
@@ -75,10 +79,10 @@ public interface ImageModelConfig {
      * Must be one of {@code vivid} or {@code natural}. Vivid causes the model to lean towards generating hyper-real and
      * dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.
      * <p>
-     * This param is only supported for when the model is {@code dall-e-3}.
+     * This param is only supported when the model is {@code dall-e-3}. When unset, the field is omitted from the
+     * request so other models are not affected.
      */
-    @WithDefault("vivid")
-    String style();
+    Optional<String> style();
 
     /**
      * A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
