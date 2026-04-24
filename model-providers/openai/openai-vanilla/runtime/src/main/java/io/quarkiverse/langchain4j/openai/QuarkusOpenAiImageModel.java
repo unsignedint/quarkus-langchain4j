@@ -18,6 +18,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import dev.langchain4j.data.image.Image;
 import dev.langchain4j.model.image.ImageModel;
 import dev.langchain4j.model.openai.internal.image.GenerateImagesRequest;
@@ -34,6 +39,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
     private final String style;
     private final Optional<String> user;
     private final String responseFormat;
+    private final String background;
     private final Integer maxRetries;
     private final Optional<Path> persistDirectory;
 
@@ -46,6 +52,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
         this.style = builder.style;
         this.user = builder.user;
         this.responseFormat = builder.responseFormat;
+        this.background = builder.background;
         this.maxRetries = builder.maxRetries;
         if (this.maxRetries < 1) {
             throw new IllegalArgumentException("max-retries must be at least 1");
@@ -135,6 +142,10 @@ public class QuarkusOpenAiImageModel implements ImageModel {
             builder.user(user.get());
         }
 
+        if (background != null) {
+            return new GenerateImagesRequestWithExtras(builder, background);
+        }
+
         return builder.build();
     }
 
@@ -154,6 +165,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
         private String style;
         private Optional<String> user;
         private String responseFormat;
+        private String background;
         private Duration timeout;
         private Integer maxRetries;
         private Boolean logRequests;
@@ -241,6 +253,11 @@ public class QuarkusOpenAiImageModel implements ImageModel {
             return this;
         }
 
+        public Builder background(String background) {
+            this.background = background;
+            return this;
+        }
+
         public Builder persistDirectory(Optional<Path> persistDirectory) {
             this.persistDirectory = persistDirectory;
             return this;
@@ -248,6 +265,28 @@ public class QuarkusOpenAiImageModel implements ImageModel {
 
         public QuarkusOpenAiImageModel build() {
             return new QuarkusOpenAiImageModel(this);
+        }
+    }
+
+    /**
+     * Carries the extra OpenAI image parameters that upstream {@code GenerateImagesRequest} does not yet model (notably
+     * {@code background} for {@code gpt-image-1}). The REST client is typed to the upstream DTO, so we subclass it and
+     * rely on Jackson to serialize the additional fields.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    static class GenerateImagesRequestWithExtras extends GenerateImagesRequest {
+
+        @JsonProperty
+        private final String background;
+
+        GenerateImagesRequestWithExtras(GenerateImagesRequest.Builder builder, String background) {
+            super(builder);
+            this.background = background;
+        }
+
+        public String getBackground() {
+            return background;
         }
     }
 

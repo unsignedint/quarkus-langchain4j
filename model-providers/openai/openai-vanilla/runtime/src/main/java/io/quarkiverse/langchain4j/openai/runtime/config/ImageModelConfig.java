@@ -64,6 +64,12 @@ public interface ImageModelConfig {
     String quality();
 
     /**
+     * The background transparency of the generated image. Must be one of {@code transparent}, {@code opaque}, or
+     * {@code auto}. This param is only supported when the model is {@code gpt-image-1}.
+     */
+    Optional<String> background();
+
+    /**
      * The number of images to generate.
      * <p>
      * Must be between 1 and 10.

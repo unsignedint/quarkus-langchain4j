@@ -26,7 +26,7 @@ import io.quarkus.test.QuarkusUnitTest;
 
 /**
  * Covers image generation with {@code gpt-image-1}, which rejects {@code style} and {@code response_format}. The
- * serialized body must omit both fields when the config keys are unset.
+ * serialized body must omit both fields, and the {@code background} parameter must be forwarded when configured.
  */
 public class GptImage1ImageModelTest extends OpenAiBaseTest {
 
@@ -38,7 +38,8 @@ public class GptImage1ImageModelTest extends OpenAiBaseTest {
                     WiremockAware.wiremockUrlForConfig("/v1"))
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "gpt-image-1")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.quality", "high")
-            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.size", "1024x1024");
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.size", "1024x1024")
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.background", "transparent");
 
     @Inject
     ImageModel imageModel;
@@ -64,7 +65,7 @@ public class GptImage1ImageModelTest extends OpenAiBaseTest {
     }
 
     @Test
-    public void omitsStyleAndResponseFormat() throws IOException {
+    public void omitsStyleAndResponseFormatAndForwardsBackground() throws IOException {
         Response<Image> response = imageModel.generate("whatever");
         assertNotNull(response);
         assertNotNull(response.content().base64Data());
@@ -76,7 +77,8 @@ public class GptImage1ImageModelTest extends OpenAiBaseTest {
                 .containsEntry("model", "gpt-image-1")
                 .containsEntry("prompt", "whatever")
                 .containsEntry("size", "1024x1024")
-                .containsEntry("quality", "high");
+                .containsEntry("quality", "high")
+                .containsEntry("background", "transparent");
         assertThat(body)
                 .doesNotContainKey("style")
                 .doesNotContainKey("response_format");
