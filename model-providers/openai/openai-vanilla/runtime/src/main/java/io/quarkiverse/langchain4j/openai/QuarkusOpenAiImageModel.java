@@ -128,9 +128,11 @@ public class QuarkusOpenAiImageModel implements ImageModel {
                 .prompt(prompt)
                 .model(modelName)
                 .n(n)
-                .size(size)
-                .quality(quality);
+                .size(size);
 
+        if (quality != null) {
+            builder.quality(quality);
+        }
         if (style != null) {
             builder.style(style);
         }
@@ -270,7 +272,7 @@ public class QuarkusOpenAiImageModel implements ImageModel {
 
     /**
      * Carries the extra OpenAI image parameters that upstream {@code GenerateImagesRequest} does not yet model (notably
-     * {@code background} for {@code gpt-image-1}). The REST client is typed to the upstream DTO, so we subclass it and
+     * {@code background} for {@code gpt-image} models). The REST client is typed to the upstream DTO, so we subclass it and
      * rely on Jackson to serialize the additional fields.
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)

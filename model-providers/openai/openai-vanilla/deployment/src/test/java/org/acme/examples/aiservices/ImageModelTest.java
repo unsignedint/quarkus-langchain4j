@@ -33,6 +33,7 @@ public class ImageModelTest extends OpenAiBaseTest {
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.base-url",
                     WiremockAware.wiremockUrlForConfig("/v1"))
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "dall-e-3")
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.quality", "standard")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.style", "vivid")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.response-format", "url");
 

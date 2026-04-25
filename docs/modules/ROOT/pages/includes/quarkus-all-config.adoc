@@ -9093,7 +9093,9 @@ endif::add-copy-button-to-config-props[]
 --
 The format in which the generated images are returned.
 
-Must be one of `url` or `b64_json`
+Must be one of `url` or `b64_json`.
+
+This param is rejected by `gpt-image` models, which always return base64 data. When unset, the field is omitted from the request so those models are not affected.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -9104,7 +9106,7 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI_IMAGE_MODEL_RESPONSE_FORMAT
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++url+++`
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-size]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-size[`+++quarkus.langchain4j.openai.image-model.size+++`]##
 ifdef::add-copy-button-to-config-props[]
@@ -9119,6 +9121,8 @@ The size of the generated images.
 Must be one of `1024x1024`, `1792x1024`, or `1024x1792` when the model is `dall-e-3`.
 
 Must be one of `256x256`, `512x512`, or `1024x1024` when the model is `dall-e-2`.
+
+Must be one of `1024x1024`, `1024x1536`, `1536x1024`, or `auto` when using `gpt-image` models.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -9141,9 +9145,7 @@ endif::add-copy-button-to-config-props[]
 --
 The quality of the image that will be generated.
 
-`hd` creates images with finer details and greater consistency across the image.
-
-This param is only supported for when the model is `dall-e-3`.
+For `dall-e-3`: `standard` or `hd`. For `dall-e-2`: `standard` only. For `gpt-image` models: `low`, `medium`, `high`, or `auto`.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -9154,7 +9156,28 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI_IMAGE_MODEL_QUALITY+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++standard+++`
+|
+
+a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-background]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-background[`quarkus.langchain4j.openai.image-model.background`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++quarkus.langchain4j.openai.image-model.background+++[]
+endif::add-copy-button-to-config-props[]
+
+
+[.description]
+--
+The background transparency of the generated image. Must be one of `transparent`, `opaque`, or `auto`. This param is only supported when using `gpt-image` models.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_LANGCHAIN4J_OPENAI_IMAGE_MODEL_BACKGROUND+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI_IMAGE_MODEL_BACKGROUND+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-number]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-number[`+++quarkus.langchain4j.openai.image-model.number+++`]##
 ifdef::add-copy-button-to-config-props[]
@@ -9193,7 +9216,7 @@ The style of the generated images.
 
 Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.
 
-This param is only supported for when the model is `dall-e-3`.
+This param is only supported when the model is `dall-e-3`. When unset, the field is omitted from the request so other models are not affected.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -9204,7 +9227,7 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI_IMAGE_MODEL_STYLE+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++vivid+++`
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-user]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-image-model-user[`+++quarkus.langchain4j.openai.image-model.user+++`]##
 ifdef::add-copy-button-to-config-props[]
@@ -10068,7 +10091,9 @@ endif::add-copy-button-to-config-props[]
 --
 The format in which the generated images are returned.
 
-Must be one of `url` or `b64_json`
+Must be one of `url` or `b64_json`.
+
+This param is rejected by `gpt-image` models, which always return base64 data. When unset, the field is omitted from the request so those models are not affected.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -10079,7 +10104,7 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI__MODEL_NAME__IMAGE_MODEL_RE
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++url+++`
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-size]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-size[`+++quarkus.langchain4j.openai."model-name".image-model.size+++`]##
 ifdef::add-copy-button-to-config-props[]
@@ -10094,6 +10119,8 @@ The size of the generated images.
 Must be one of `1024x1024`, `1792x1024`, or `1024x1792` when the model is `dall-e-3`.
 
 Must be one of `256x256`, `512x512`, or `1024x1024` when the model is `dall-e-2`.
+
+Must be one of `1024x1024`, `1024x1536`, `1536x1024`, or `auto` when using `gpt-image` models.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -10116,9 +10143,7 @@ endif::add-copy-button-to-config-props[]
 --
 The quality of the image that will be generated.
 
-`hd` creates images with finer details and greater consistency across the image.
-
-This param is only supported for when the model is `dall-e-3`.
+For `dall-e-3`: `standard` or `hd`. For `dall-e-2`: `standard` only. For `gpt-image` models: `low`, `medium`, `high`, or `auto`.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -10129,7 +10154,28 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI__MODEL_NAME__IMAGE_MODEL_QU
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++standard+++`
+|
+
+a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-background]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-background[`quarkus.langchain4j.openai."model-name".image-model.background`]##
+ifdef::add-copy-button-to-config-props[]
+config_property_copy_button:+++quarkus.langchain4j.openai."model-name".image-model.background+++[]
+endif::add-copy-button-to-config-props[]
+
+
+[.description]
+--
+The background transparency of the generated image. Must be one of `transparent`, `opaque`, or `auto`. This param is only supported when using `gpt-image` models.
+
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_LANGCHAIN4J_OPENAI__MODEL_NAME__IMAGE_MODEL_BACKGROUND+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI__MODEL_NAME__IMAGE_MODEL_BACKGROUND+++`
+endif::add-copy-button-to-env-var[]
+--
+|string
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-number]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-number[`+++quarkus.langchain4j.openai."model-name".image-model.number+++`]##
 ifdef::add-copy-button-to-config-props[]
@@ -10168,7 +10214,7 @@ The style of the generated images.
 
 Must be one of `vivid` or `natural`. Vivid causes the model to lean towards generating hyper-real and dramatic images. Natural causes the model to produce more natural, less hyper-real looking images.
 
-This param is only supported for when the model is `dall-e-3`.
+This param is only supported when the model is `dall-e-3`. When unset, the field is omitted from the request so other models are not affected.
 
 
 ifdef::add-copy-button-to-env-var[]
@@ -10179,7 +10225,7 @@ Environment variable: `+++QUARKUS_LANGCHAIN4J_OPENAI__MODEL_NAME__IMAGE_MODEL_ST
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`+++vivid+++`
+|
 
 a| [[quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-user]] [.property-path]##link:#quarkus-langchain4j-openai_quarkus-langchain4j-openai-model-name-image-model-user[`+++quarkus.langchain4j.openai."model-name".image-model.user+++`]##
 ifdef::add-copy-button-to-config-props[]

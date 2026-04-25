@@ -36,7 +36,7 @@ public interface ImageModelConfig {
      * <p>
      * Must be one of {@code url} or {@code b64_json}.
      * <p>
-     * This param is rejected by {@code gpt-image-1} and later image models, which always return base64 data. When
+     * This param is rejected by {@code gpt-image} models, which always return base64 data. When
      * unset, the field is omitted from the request so those models are not affected.
      */
     Optional<String> responseFormat();
@@ -48,8 +48,8 @@ public interface ImageModelConfig {
      * <p>
      * Must be one of {@code 256x256}, {@code 512x512}, or {@code 1024x1024} when the model is {@code dall-e-2}.
      * <p>
-     * Must be one of {@code 1024x1024}, {@code 1024x1536}, {@code 1536x1024}, or {@code auto} when the model is
-     * {@code gpt-image-1}.
+     * Must be one of {@code 1024x1024}, {@code 1024x1536}, {@code 1536x1024}, or {@code auto} when using
+     * {@code gpt-image} models.
      */
     @WithDefault("1024x1024")
     String size();
@@ -58,14 +58,13 @@ public interface ImageModelConfig {
      * The quality of the image that will be generated.
      * <p>
      * For {@code dall-e-3}: {@code standard} or {@code hd}. For {@code dall-e-2}: {@code standard} only. For
-     * {@code gpt-image-1}: {@code low}, {@code medium}, {@code high}, or {@code auto}.
+     * {@code gpt-image} models: {@code low}, {@code medium}, {@code high}, or {@code auto}.
      */
-    @WithDefault("standard")
-    String quality();
+    Optional<String> quality();
 
     /**
      * The background transparency of the generated image. Must be one of {@code transparent}, {@code opaque}, or
-     * {@code auto}. This param is only supported when the model is {@code gpt-image-1}.
+     * {@code auto}. This param is only supported when using {@code gpt-image} models.
      */
     Optional<String> background();
 

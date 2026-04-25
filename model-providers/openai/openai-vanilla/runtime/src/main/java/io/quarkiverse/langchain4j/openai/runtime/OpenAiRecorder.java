@@ -343,7 +343,7 @@ public class OpenAiRecorder {
                     .logCurl(firstOrDefault(false, openAiConfig.logRequestsCurl()))
                     .modelName(imageModelConfig.modelName())
                     .size(imageModelConfig.size())
-                    .quality(imageModelConfig.quality())
+                    .quality(imageModelConfig.quality().orElse(null))
                     .style(imageModelConfig.style().orElse(null))
                     .responseFormat(imageModelConfig.responseFormat().orElse(null))
                     .background(imageModelConfig.background().orElse(null))
