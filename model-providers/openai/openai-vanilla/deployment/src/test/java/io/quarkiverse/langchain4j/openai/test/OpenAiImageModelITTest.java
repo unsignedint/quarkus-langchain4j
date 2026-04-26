@@ -21,7 +21,7 @@ import io.quarkus.test.QuarkusUnitTest;
 
 /**
  * End-to-end image generation smoke test against the real OpenAI API. Runs only when {@code OPENAI_API_KEY} is set, and
- * exercises both the newer {@code gpt-image-1} model (which rejects {@code style} and {@code response_format}) and the
+ * exercises both the newer {@code gpt-image-2} model (which rejects {@code style} and {@code response_format}) and the
  * older {@code dall-e-3} model.
  */
 @EnabledIfEnvironmentVariable(named = "OPENAI_API_KEY", matches = ".+")
@@ -34,10 +34,10 @@ public class OpenAiImageModelITTest {
             .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class))
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.api-key", API_KEY)
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.timeout", "120s")
-            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "gpt-image-1")
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "gpt-image-2")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.size", "1024x1024")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.quality", "low")
-            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.background", "transparent")
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.background", "auto")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.\"dalle3\".api-key", API_KEY)
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.\"dalle3\".timeout", "120s")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.\"dalle3\".image-model.model-name",
@@ -48,18 +48,18 @@ public class OpenAiImageModelITTest {
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.\"dalle3\".image-model.response-format", "url");
 
     @Inject
-    ImageModel gptImage1;
+    ImageModel gptImage2;
 
     @Inject
     @ModelName("dalle3")
     ImageModel dalle3;
 
     @Test
-    void generatesWithGptImage1() {
-        Response<Image> response = gptImage1.generate("a minimalist cube icon on a plain background");
+    void generatesWithGptImage2() {
+        Response<Image> response = gptImage2.generate("a minimalist cube icon on a plain background");
         Image image = response.content();
         assertThat(image).isNotNull();
-        assertThat(image.base64Data()).as("gpt-image-1 returns base64 data").isNotBlank();
+        assertThat(image.base64Data()).as("gpt-image-2 returns base64 data").isNotBlank();
     }
 
     @Test

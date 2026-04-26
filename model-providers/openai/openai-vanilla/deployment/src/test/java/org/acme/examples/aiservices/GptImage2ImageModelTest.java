@@ -25,10 +25,10 @@ import io.quarkiverse.langchain4j.testing.internal.WiremockAware;
 import io.quarkus.test.QuarkusUnitTest;
 
 /**
- * Covers image generation with {@code gpt-image-1}, which rejects {@code style} and {@code response_format}. The
+ * Covers image generation with {@code gpt-image-2}, which rejects {@code style} and {@code response_format}. The
  * serialized body must omit both fields, and the {@code background} parameter must be forwarded when configured.
  */
-public class GptImage1ImageModelTest extends OpenAiBaseTest {
+public class GptImage2ImageModelTest extends OpenAiBaseTest {
 
     @RegisterExtension
     static final QuarkusUnitTest unitTest = new QuarkusUnitTest()
@@ -36,7 +36,7 @@ public class GptImage1ImageModelTest extends OpenAiBaseTest {
                     () -> ShrinkWrap.create(JavaArchive.class))
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.base-url",
                     WiremockAware.wiremockUrlForConfig("/v1"))
-            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "gpt-image-1")
+            .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.model-name", "gpt-image-2")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.quality", "high")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.size", "1024x1024")
             .overrideRuntimeConfigKey("quarkus.langchain4j.openai.image-model.background", "transparent");
@@ -74,7 +74,7 @@ public class GptImage1ImageModelTest extends OpenAiBaseTest {
 
         Map<String, Object> body = getRequestAsMap();
         assertThat(body)
-                .containsEntry("model", "gpt-image-1")
+                .containsEntry("model", "gpt-image-2")
                 .containsEntry("prompt", "whatever")
                 .containsEntry("size", "1024x1024")
                 .containsEntry("quality", "high")
